@@ -4,7 +4,7 @@ name: CI
 on:
   push:
     branches:
-        -main
+        - main
 # we want to triiger it manually in the UI.
   workflow_dispatch:
 # we will make first job a unit test job
