@@ -32,7 +32,7 @@ jobs:
       # What we done before either to install go before run UT or using docker image that will install go tool.
       # But in github we can use special actions that have beeen predefined and will install go quickly on our github.
         run:                                                                       
-          go test -v ./..
+          go test -v ./...
 
 
 
