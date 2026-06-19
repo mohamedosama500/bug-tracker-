@@ -1,0 +1,38 @@
+# name of workflow
+name: CI
+# we want this workflow to run every time we push to the main
+on:
+  push:
+    branches:
+        -main
+# we want to triiger it manually in the UI.
+  workflow_dispatch:
+# we will make first job a unit test job
+jobs:
+  unit-tests-backend:
+    runs-on: ubuntu-latest
+    steps:
+     # First job action to checkout the code
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21"
+          #after the branch is cloned it makes next runs much quicker
+          cache-dependency-path: bugtracker-backend/go.sum
+
+      # The name that will appear in the UI
+      - name: Execute Backend Unit Tests 
+      # Specify the working directory that we want unit test to run
+        working-directory: ./bugtracker-backend
+      # Specify the shell commands that we want to run, we want to run all go tests.
+      # For first run will fail as after defined that it runs on ubuntu-latest,
+      # So we will have to install go before using it.
+      # What we done before either to install go before run UT or using docker image that will install go tool.
+      # But in github we can use special actions that have beeen predefined and will install go quickly on our github.
+        run:                                                                       
+          go test -v ./..
+
+
+
