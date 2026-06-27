@@ -35,6 +35,26 @@ jobs:
           go test -v ./...
 
   unit-tests-frontend:
-  
+    # it means i want to make backend to run first as they are runing sequential
+    needs: unit-tests-backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: set up Node.jobs
+        # its a github action used to setup the node for us its made by someone else
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+           #after the branch is cloned it makes next runs much quicker
+          cache-dependency-path: bugtracker-frontend/package-lock.json
+
+
+
+      - name: Execute Frontend Unit Tests
+        working-directory: ./bugtracker-frontend
+        run:
+          npm CI
+          npm test
 
 
