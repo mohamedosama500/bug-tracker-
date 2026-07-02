@@ -42,7 +42,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: set up Node.jobs
         # its a github action used to setup the node for us its made by someone else
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "24"
           cache: "npm"
