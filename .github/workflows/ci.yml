@@ -44,7 +44,7 @@ jobs:
         # its a github action used to setup the node for us its made by someone else
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "npm"
            #after the branch is cloned it makes next runs much quicker
           cache-dependency-path: bugtracker-frontend/package-lock.json
