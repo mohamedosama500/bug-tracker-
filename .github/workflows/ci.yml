@@ -60,11 +60,11 @@ jobs:
       - name: Publish Frontend Test Results
         # to use pre-built, community-made action called test-reporter created by the user dorny
         uses: dorny/test-reporter@v1
-        #to make sure that the test runs even it fails
+        # to make sure that the test runs even it fails
         if: always()
         with:
          name: Frontend Unit Tests Report
          path: bugtracker-frontend/test-results.xml
-         #Tells this action to expect a JUnit XML format, which is the specific structure jest-junit uses to log test results.
+         # Tells this action to expect a JUnit XML format, which is the specific structure jest-junit uses to log test results.
          reporter: jest-junit
 
