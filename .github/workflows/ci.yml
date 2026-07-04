@@ -22,6 +22,9 @@ jobs:
           #after the branch is cloned it makes next runs much quicker
           cache-dependency-path: bugtracker-backend/go.sum
 
+      - name: Install go-junit-report
+        run: go install github.com/jstemmer/go-junit-report/v2@latest
+
       # The name that will appear in the UI
       - name: Execute Backend Unit Tests 
       # Specify the working directory that we want unit test to run
@@ -32,7 +35,18 @@ jobs:
       # What we done before either to install go before run UT or using docker image that will install go tool.
       # But in github we can use special actions that have beeen predefined and will install go quickly on our github.
         run:                                                                       
-          go test -v ./...
+          go test -v ./... 2>&1 | go-junit-report > test-results.xml
+
+      - name: Publish Backend Test Results
+        # to use pre-built, community-made action called test-reporter created by the user dorny
+        uses: dorny/test-reporter@v1
+        # to make sure that the test runs even it fails
+        if: always()
+        with:
+          name: Backend Unit Tests Report
+          path: bugtracker-backend/test-results.xml
+          # Tells this action to expect a JUnit XML format, which is the specific structure jest-junit uses to log test results.
+          reporter: jest-junit
 
   unit-tests-frontend:
     # it means i want to make backend to run first as they are runing sequential
