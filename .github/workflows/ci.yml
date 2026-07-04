@@ -42,9 +42,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: set up Node.jobs
         # its a github action used to setup the node for us its made by someone else
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: "20"
           cache: "npm"
            #after the branch is cloned it makes next runs much quicker
           cache-dependency-path: bugtracker-frontend/package-lock.json
@@ -63,8 +63,8 @@ jobs:
         # to make sure that the test runs even it fails
         if: always()
         with:
-         name: Frontend Unit Tests Report
-         path: bugtracker-frontend/test-results.xml
-         # Tells this action to expect a JUnit XML format, which is the specific structure jest-junit uses to log test results.
-         reporter: jest-junit
+          name: Frontend Unit Tests Report
+          path: bugtracker-frontend/test-results.xml
+          # Tells this action to expect a JUnit XML format, which is the specific structure jest-junit uses to log test results.
+          reporter: jest-junit
 
