@@ -36,7 +36,7 @@ jobs:
       # So we will have to install go before using it.
       # What we done before either to install go before run UT or using docker image that will install go tool.
       # But in github we can use special actions that have beeen predefined and will install go quickly on our github.
-        run: 
+        run: |
           go test -json -coverprofile=coverage.out -covermode=atomic ./...     
           go tool cover -func=coverage.out > coverage.txt
           echo "## Go Test Coverage Report" >> $GITHUB_STEP_SUMMARY
