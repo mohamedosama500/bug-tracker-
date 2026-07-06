@@ -114,28 +114,29 @@ jobs:
           # Tells this action to expect a JUnit XML format, which is the specific structure jest-junit uses to log test results.
           reporter: jest-junit
 
-create-coverage-comment:
-  # to trun wehn there is a pull request triggered
-  if: github.event_name == 'pull_request'
-  # we will make first this to the backend tests
-  needs: [unit-tests-backend]
-  runs-on: ubuntu-latest
-  # we want this job to make comments so we have to give her permissions like 
-  permissions:
-    pull-requests: write
-  steps:
-    - name: Create Backend Coverage comment
-      # we can take actions that exist in marketplace or anywhere else then bring them to your project
-      uses: peter-evans/create-or-update-comment@v4
-      with:
-        # pull request number
-        issue-number: ${{github.event.pull_request.number}}
-        # we will need here to add the actual body of the comment itself
-        body: |
-          ## Backend Test Coverage Report, it takes output from another job
-          ## we will pull this data out of outputs.coverage job
+  create-coverage-comment:
+      # to trun wehn there is a pull request triggered
+      if: github.event_name == 'pull_request'
+      # we will make first this to the backend tests
+      needs: [unit-tests-backend]
+      runs-on: ubuntu-latest
+      # we want this job to make comments so we have to give her permissions like 
+      permissions:
+        pull-requests: write
+      steps:
+        - name: Create Backend Coverage comment
+          # we can take actions that exist in marketplace or anywhere else then bring them to your project
+          uses: peter-evans/create-or-update-comment@v4
+          with:
+            # pull request number
+            issue-number: ${{github.event.pull_request.number}}
+            # we will need here to add the actual body of the comment itself
+            ## we will pull this data out of outputs.coverage job
+            body: |
+              ## Backend Test Coverage Report, it takes output from another job
+             
 
-          ```
-          ${{ needs.unit-tests-backend.outputs.coverage }}
+              ```
+              ${{ needs.unit-tests-backend.outputs.coverage }}
 
-          ```
+              ```
