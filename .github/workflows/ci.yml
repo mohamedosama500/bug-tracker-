@@ -5,12 +5,19 @@ on:
   push:
     branches:
         - main
+#to trigger on pull requests also
+  pull_request:
+    branches:
+        - main
 # we want to triiger it manually in the UI.
   workflow_dispatch:
 # we will make first job a unit test job
 jobs:
   unit-tests-backend:
     runs-on: ubuntu-latest
+    outputs:
+      coverage: ${{ steps.test_backend.outputs.report }}
+
     steps:
      # First job action to checkout the code
       - uses: actions/checkout@v4
@@ -28,6 +35,8 @@ jobs:
 
       # The name that will appear in the UI
       - name: Execute Backend Unit Tests 
+      # we adding id for the output needed to be tracked
+        id: test-backend
       # Specify the working directory that we want unit test to run
         working-directory: ./bugtracker-backend
       # Specify the shell commands that we want to run, we want to run all go tests.
@@ -36,6 +45,8 @@ jobs:
       # What we done before either to install go before run UT or using docker image that will install go tool.
       # But in github we can use special actions that have beeen predefined and will install go quickly on our github.
       # we are using cat which printing every thing in the coverage txt file to the UI
+      ##  echo"report<<EOF" $GITHUB_OUTPUT This initializes a multi-line output variable named report. The <<EOF tells GitHub Actions, "Hey, everything after this is part of the report value, until you see the word EOF again."
+
         run: |
           go test -json -coverprofile coverage.out -covermode=atomic ./...     
           go tool cover -func coverage.out > coverage.txt
@@ -44,6 +55,11 @@ jobs:
           cat coverage.txt >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           go test -v ./... 2>&1 | go-junit-report > test-results.xml
+
+          echo "report<<EOF" >> $GITHUB_OUTPUT
+          cat coverage.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
 
       - name: Publish Backend Test Results
         # to use pre-built, community-made action called test-reporter created by the user dorny
@@ -60,7 +76,6 @@ jobs:
 
   unit-tests-frontend:
     # it means i want to make backend to run first as they are runing sequential
-    needs: unit-tests-backend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -98,3 +113,29 @@ jobs:
           # Tells this action to expect a JUnit XML format, which is the specific structure jest-junit uses to log test results.
           reporter: jest-junit
 
+  create-coverage-comment:
+      # to trun wehn there is a pull request triggered
+      if: github.event_name == 'pull_request'
+      # we will make first this to the backend tests
+      needs: [unit-tests-backend]
+      runs-on: ubuntu-latest
+      # we want this job to make comments so we have to give her permissions like 
+      permissions:
+        pull-requests: write
+      steps:
+        - name: Create Backend Coverage comment
+          # we can take actions that exist in marketplace or anywhere else then bring them to your project
+          uses: peter-evans/create-or-update-comment@v4
+          with:
+            # pull request number
+            issue-number: ${{github.event.pull_request.number}}
+            # we will need here to add the actual body of the comment itself
+            ## we will pull this data out of outputs.coverage job
+            body: |
+              ## Backend Test Coverage Report, it takes output from another job
+             
+
+              ```
+              ${{ needs.unit-tests-backend.outputs.coverage }}
+
+              ```
