@@ -16,7 +16,7 @@ jobs:
   unit-tests-backend:
     runs-on: ubuntu-latest
     outputs:
-      coverage: ${{steps.test_backend.outputs.reports}}
+      coverage: ${{ steps.test_backend.outputs.report }}
 
     steps:
      # First job action to checkout the code
@@ -56,10 +56,9 @@ jobs:
           echo '```' >> $GITHUB_STEP_SUMMARY
           go test -v ./... 2>&1 | go-junit-report > test-results.xml
 
-          echo"report<<EOF" $GITHUB_OUTPUT
-          cat coverage.txt >>  $GITHUB_OUTPUT
-          echo"EOF" $GITHUB_OUTPUT
-
+          echo "report<<EOF" >> $GITHUB_OUTPUT
+          cat coverage.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
 
       - name: Publish Backend Test Results
