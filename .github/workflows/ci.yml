@@ -9,14 +9,14 @@ on:
   pull_request:
     branches:
         - main
-# we want to triiger it manually in the UI.
+# we want to trigger it manually in the UI.
   workflow_dispatch:
 # we will make first job a unit test job
 jobs:
   unit-tests-backend:
     runs-on: ubuntu-latest
     outputs:
-      coverage: ${{ steps.test_backend.outputs.report }}
+      coverage: ${{ steps.test-backend.outputs.report }}
 
     steps:
      # First job action to checkout the code
@@ -78,7 +78,7 @@ jobs:
     # it means i want to make backend to run first as they are runing sequential
     runs-on: ubuntu-latest
     outputs:
-      coverage: ${{ steps.test_frontend.outputs.report }}
+      coverage: ${{ steps.test-frontend.outputs.report }}
     steps:
       - uses: actions/checkout@v4
       - name: set up Node.jobs
@@ -135,30 +135,26 @@ jobs:
           uses: peter-evans/create-or-update-comment@v4
           with:
             # pull request number
-            issue-number: ${{github.event.pull_request.number}}
+            issue-number: ${{ github.event.pull_request.number }}
             # we will need here to add the actual body of the comment itself
             ## we will pull this data out of outputs.coverage job
+             ## Backend Test Coverage Report, it takes output from another job
             body: |
-              ## Backend Test Coverage Report, it takes output from another job
-             
-
+              ## Backend Test Coverage Report
               ```
               ${{ needs.unit-tests-backend.outputs.coverage }}
-
               ```
         - name: Create Frontend Coverage comment
           # we can take actions that exist in marketplace or anywhere else then bring them to your project
           uses: peter-evans/create-or-update-comment@v4
           with:
             # pull request number
-            issue-number: ${{github.event.pull_request.number}}
+            issue-number: ${{ github.event.pull_request.number }}
             # we will need here to add the actual body of the comment itself
             ## we will pull this data out of outputs.coverage job
+            ## Frontend Test Coverage Report, it takes output from another job
             body: |
-              ## Frontend Test Coverage Report, it takes output from another job
-             
-
+              ## Frontend Test Coverage Report
               ```
               ${{ needs.unit-tests-frontend.outputs.coverage }}
-
               ```
