@@ -35,6 +35,7 @@ jobs:
       # So we will have to install go before using it.
       # What we done before either to install go before run UT or using docker image that will install go tool.
       # But in github we can use special actions that have beeen predefined and will install go quickly on our github.
+      # we are using cat which printing every thing in the coverage txt file to the UI
         run: |
           go test -json -coverprofile coverage.out -covermode=atomic ./...     
           go tool cover -func coverage.out > coverage.txt
@@ -78,7 +79,12 @@ jobs:
         working-directory: ./bugtracker-frontend
         run:
           npm ci
-          npm test
+          npm test |tee full_output.txt
+
+          echo "## Frontend Test Coverage Report" >> $GiTHUB_STEP_SUMMERY
+          echo "```" >> $GiTHUB_STEP_SUMMERY
+          cat full_output.txt >> $GiTHUB_STEP_SUMMERY
+          echo "```" >> $GiTHUB_STEP_SUMMERY
 
       - name: Publish Frontend Test Results
         # to use pre-built, community-made action called test-reporter created by the user dorny
