@@ -81,10 +81,11 @@ jobs:
           npm ci
           npm test |tee full_output.txt
 
-          echo "## Frontend Test Coverage Report" >> $GiTHUB_STEP_SUMMARY
-          echo '```' >> $GiTHUB_STEP_SUMMARY
-          cat full_output.txt >> $GiTHUB_STEP_SUMMARY
-          echo '```' >> $GiTHUB_STEP_SUMMARY
+         
+          echo "## Frontend Test Coverage Report" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat full_output.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Publish Frontend Test Results
         # to use pre-built, community-made action called test-reporter created by the user dorny
