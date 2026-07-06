@@ -5,6 +5,10 @@ on:
   push:
     branches:
         - main
+#to trigger on pull requests also
+  pull_request:
+    branches:
+        - main
 # we want to triiger it manually in the UI.
   workflow_dispatch:
 # we will make first job a unit test job
