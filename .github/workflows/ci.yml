@@ -176,3 +176,32 @@ jobs:
         run: |
           npm ci
           npx playwright test
+
+      - name: Shut Down Application
+        run: docker compose Down
+
+      - name: Upload API Test Results
+        # always run this step if the previous step has failed
+        if: always()
+        # we are using special upload artifact action
+        uses: actions/upload-artifact@v4
+        # Then we are giving this some parameters.
+        with: 
+          name: api-test-results
+          # we are giving the path where these results are living 
+          path: ./tests-api/test-results/
+          # this is the number of days where test results will stay in github, so that it can be downloaded
+          retention-days: 30
+
+      - name: Upload API Test Playwright Report
+        # always run this step if the previous step has failed
+        if: always()
+        # we are using special upload artifact action
+        uses: actions/upload-artifact@v4
+        # Then we are giving this some parameters.
+        with: 
+          name: api-test-playwright-report
+          # we are giving the path where these results are living 
+          path: ./tests-api/playwright-report
+          # this is the number of days where test results will stay in github, so that it can be downloaded
+          retention-days: 30
