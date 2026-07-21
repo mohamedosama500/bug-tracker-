@@ -111,7 +111,7 @@ jobs:
 
       - name: Publish Frontend Test Results
         # to use pre-built, community-made action called test-reporter created by the user dorny
-        uses: dorny/test-reporter@vv1.9.0
+        uses: dorny/test-reporter@v1.9.0
         # to make sure that the test runs even it fails
         if: always()
         with:
