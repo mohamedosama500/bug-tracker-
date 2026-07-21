@@ -205,3 +205,14 @@ jobs:
           path: ./tests-api/playwright-report
           # this is the number of days where test results will stay in github, so that it can be downloaded
           retention-days: 30
+
+      - name: Publish API Test Results
+
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: API Test Report
+          # we made *.xml file to take all types of xml files
+          path: ./tests-api/test-results/*.xml
+          reporter: jtest-junit
+          
