@@ -20,10 +20,10 @@ jobs:
 
     steps:
      # First job action to checkout the code
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: "1.21"
           #after the branch is cloned it makes next runs much quicker
@@ -80,10 +80,10 @@ jobs:
     outputs:
       coverage: ${{ steps.test-frontend.outputs.report }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: set up Node.jobs
         # its a github action used to setup the node for us its made by someone else
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "20"
           cache: "npm"
@@ -111,7 +111,7 @@ jobs:
 
       - name: Publish Frontend Test Results
         # to use pre-built, community-made action called test-reporter created by the user dorny
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@vv1.9.0
         # to make sure that the test runs even it fails
         if: always()
         with:
@@ -164,7 +164,7 @@ jobs:
 
     steps: 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Launch Application
         run: |
@@ -184,7 +184,7 @@ jobs:
         # always run this step if the previous step has failed
         if: always()
         # we are using special upload artifact action
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         # Then we are giving this some parameters.
         with: 
           name: api-test-results
@@ -197,7 +197,7 @@ jobs:
         # always run this step if the previous step has failed
         if: always()
         # we are using special upload artifact action
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         # Then we are giving this some parameters.
         with: 
           name: api-test-playwright-report
@@ -208,7 +208,7 @@ jobs:
 
       - name: Publish API Test Results
 
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v1.9.0
         if: always()
         with:
           name: API Test Report
