@@ -214,5 +214,4 @@ jobs:
           name: API Test Report
           # we made *.xml file to take all types of xml files
           path: ./tests-api/test-results/*.xml
-          reporter: jtest-junit
-          
+          reporter: jest-junit
